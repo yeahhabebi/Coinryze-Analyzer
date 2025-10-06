@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: .
+    command: streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./fetcher:/app/fetcher
+    environment:
+      - CSV_PATH=frontend/coinryze_history.csv
+      - PARQUET_PATH=frontend/coinryze_history.parquet
+      - FETCH_INTERVAL_MIN=1
+      - COINRYZE_URL=https://coinryze.org
+    depends_on:
+      - worker
+
+  worker:
+    build: .
+    command: bash ./render-worker.sh
+    environment:
+      - FETCH_INTERVAL_MIN=1
+      - CSV_PATH=frontend/coinryze_history.csv
+      - PARQUET_PATH=frontend/coinryze_history.parquet
+      - COINRYZE_URL=https://coinryze.org
