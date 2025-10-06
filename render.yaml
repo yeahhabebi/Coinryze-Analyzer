@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: coinryze-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit/dashboard.py --server.port $PORT --server.address 0.0.0.0
+    plan: free
+    envVars:
+      - key: BACKEND_URL
+        value: https://coinryze-backend.onrender.com
+      - key: CSV_PATH
+        value: /app/frontend/coinryze_history.csv
+
+  - type: web
+    name: coinryze-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: MODEL_PATH
+        value: /app/models/rf_model.joblib
+
+  - type: worker
+    name: coinryze-worker
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./render-worker.sh
+    plan: free
+    envVars:
+      - key: COINRYZE_URL
+        value: https://coinryze.org
+      - key: CSV_PATH
+        value: /app/frontend/coinryze_history.csv
+      - key: PARQUET_PATH
+        value: /app/frontend/coinryze_history.parquet
+      - key: FETCH_INTERVAL_MIN
+        value: "1"
