@@ -1,0 +1,16 @@
+requests
+beautifulsoup4
+lxml
+pandas
+pyarrow
+apscheduler
+boto3
+fastapi
+uvicorn[standard]
+joblib
+numpy
+scikit-learn
+plotly
+streamlit
+python-multipart
+# tensorflow-cpu   # optional: uncomment only if you will train/use LSTM (large)
