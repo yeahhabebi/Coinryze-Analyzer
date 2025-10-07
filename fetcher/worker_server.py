@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # import your existing fetch function
-from fetch_coinryze import fetch_and_save
+from fetcher.fetch_coinryze import fetch_and_save
 
 app = FastAPI()
 scheduler = BackgroundScheduler()
