@@ -1,7 +1,14 @@
+# --- Dockerfile.worker ---
 FROM python:3.11-slim
+
 WORKDIR /app
-COPY requirements.txt .
+COPY ../requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY fetcher/ ./fetcher/
-COPY frontend/ ./frontend/
-CMD ["python","-u","fetcher/fetch_coinryze.py"]
+
+COPY . /app/fetcher
+WORKDIR /app/fetcher
+
+# Ensure script is executable
+RUN chmod +x /app/fetcher/fetch_coinryze.py
+
+CMD ["python", "-u", "fetch_coinryze.py"]
